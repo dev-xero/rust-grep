@@ -44,16 +44,32 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     results
 }
 
+pub fn search_case_insensitive<'b>(query: &str, contents: &'b str) -> Vec<&'b str> {
+    vec![]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn one_result() {
+    fn case_sensitive() {
         let query = "duct";
         let contents = "\
-            Rust:\nsafe, fast, productive.\nPick three.";
+            Rust:\nsafe, fast, productive.\nPick three.\nDuct tape.";
 
         assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+
+    #[test]
+    fn case_insensitive() {
+        let query = "rUsT";
+        let contents = "\
+            Rust:\nsafe, fast, productive.\nTrust me.";
+        
+        assert_eq!(
+            vec!["Rust:", "Trust me."],
+            search_case_insensitive(query, contents)
+        );
     }
 }
