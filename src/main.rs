@@ -1,19 +1,27 @@
 use std::{env, fs};
 
-fn parse_config(args: &[String]) -> (&str, &str) {
-    let query = &args[1];
-    let filepath = &args[2];
+struct Config {
+    query: String,
+    file_path: String
+}
 
-    (query, filepath)
+fn parse_config(args: &[String]) -> Config {
+    let query = args[1].clone();
+    let file_path = args[2].clone();
+
+    Config {
+        query,
+        file_path
+    }
 }
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let (query, filepath) = parse_config(&args);
-    let contents = fs::read_to_string(filepath)
+    let config = parse_config(&args);
+    let contents = fs::read_to_string(&config.file_path)
         .expect("Should have been able to read the file");
 
-    println!("Searching for: {}", query);
-    println!("In file: {}", filepath);
+    println!("Searching for: {}", config.query);
+    println!("In file: {}\n", config.file_path);
     println!("Contents: {}", contents);
 }
