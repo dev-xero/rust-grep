@@ -1,4 +1,5 @@
 use std::{env, fs, process};
+use std::error::Error;
 
 struct Config {
     query: String,
@@ -21,11 +22,11 @@ impl Config {
     }
 }
 
-fn run(config: Config) {
-    let contents = fs::read_to_string(&config.file_path)
-        .expect("Should have been able to read the file");
-
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(&config.file_path)?;
     println!("Contents: {}", contents);
+
+    Ok(())
 }
 
 fn main() {
@@ -39,5 +40,8 @@ fn main() {
     println!("Searching for: {}", config.query);
     println!("In file: {}\n", config.file_path);
 
-    run(config);
+    if let Err(err) = run(config) {
+        println!("Application error: {}", err);
+        process::exit(1);
+    }
 }
